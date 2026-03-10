@@ -1,0 +1,103 @@
+% Encoding and fonts
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+% Math and typesetting
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{microtype}
+
+% Figures and tables
+\usepackage{float}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{siunitx}
+\usepackage{adjustbox}
+\sisetup{detect-all}
+
+% Hyperlinks then cleveref
+\usepackage[unicode,hidelinks]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+% Colors
+\usepackage{xcolor}
+
+% Comment command: \com{red text}{blue comment}
+% In math mode: adds blue comment in \text{} with spacing
+% In text mode: adds blue comment in parentheses right after
+\newcommand{\com}[2]{%
+  \textcolor{red}{#1}%
+  \ifmmode
+    \quad\text{\textcolor{blue}{(#2)}}%
+  \else
+    {\textcolor{blue}{ (#2)}}%
+  \fi
+}
+
+% Comment environment: for complex content with figures, paragraphs, etc.
+% Usage: \begin{comenv}{blue comment} ... content in red ... \end{comenv}
+\usepackage{xparse}
+\NewDocumentEnvironment{comenv}{+m}{%
+  \gdef\comenvarg{#1}%
+  \captionsetup{font={color=red}, labelfont={color=red}}%
+  \color{red}\ignorespaces
+}{%
+  \ignorespacesafterend\color{black}%
+  \par\noindent{\color{blue}(\comenvarg)}%
+}
+
+% Common math operators
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Simplex}{\Delta}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+% Hyperref: sanitize commands inside PDF strings and bookmarks
+\AtBeginDocument{%
+  \pdfstringdefDisableCommands{%
+    \def\corref#1{}%
+    \def\cortext#1{}%
+    \def\fnref#1{}%
+    \def\ead#1{}%
+    \def\thanks#1{}%
+    \def\footnote#1{}%
+    \def\bm#1{#1}%
+    \def\mathbb#1{#1}%
+    \def\mathbf#1{#1}%
+    \def\tau{tau}%
+  }%
+}
+
+% Mild line-breaking help to avoid tiny overfull boxes
+\emergencystretch=1.5em
+
+% Optional PDF metadata
+\hypersetup{
+  pdftitle = {An MCDM Method for Sorting with Temporal Criteria},
+  pdfauthor = {First Last}
+}
+
+% TEMPORARY: Disable citations while bibliography is incomplete
+% Remove this block once refs.bib is populated
+\AtBeginDocument{%
+  \renewcommand{\cite}[2][]{[?]}%
+  \renewcommand{\citet}[2][]{[?]}%
+  \renewcommand{\citep}[2][]{[?]}%
+}

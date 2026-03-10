@@ -1,0 +1,41 @@
+\appendix
+\newpage
+\section{Notation Reference}
+\label{app:notation}
+
+\begin{table}[!h]
+  \centering
+  \small
+    \caption{Notation reference for the decision model criteria.}
+  \label{tab:notation}
+  \begin{tabular}{|c|p{11.5cm}|}
+    \hline
+    \textbf{Symbol} & \textbf{Description}\\\hline
+    \multicolumn{2}{|c|}{\textit{Sets and Indices}} \\\hline
+    $\mathcal{I}$ & Set of all interventions. \\\hline
+    $\mathcal{R}$ & Set of all resources. \\\hline
+    $T$ & Planning horizon (number of timesteps, $T=131$). \\\hline
+    $\mathcal{A}_t$ & Set of interventions active at timestep $t$. \\\hline
+    $\mathcal{I}_{crit}$ & Set of critical interventions (top 10\% by mean risk $\bar{r}_i$). \\\hline
+    $\mathcal{T}_{winter}$ & Set of winter timesteps (December, January, February). \\\hline
+    $\mathcal{T}_{summer}$ & Set of summer timesteps (June, July, August). \\\hline
+    $\mathcal{T}_{weekend}$ & Set of timesteps corresponding to weekends (Saturday, Sunday). \\\hline
+    $s_i$ & Start timestep of intervention $i$. \\\hline
+    \multicolumn{2}{|c|}{\textit{Risk Variables}} \\\hline
+    $\bar{r}_{i,t}$ & Mean risk of intervention $i$ at timestep $t$, averaged over all scenarios. \\\hline
+    $\bar{r}_i$ & Mean risk of intervention $i$, averaged over all active timesteps. \\\hline
+    $R_t$ & Aggregate daily risk: $R_t = \sum_{i \in \mathcal{A}_t} \bar{r}_{i,t}$. \\\hline
+    \multicolumn{2}{|c|}{\textit{Resource Variables}} \\\hline
+    $w_{r,t}^{(i)}$ & Workload of intervention $i$ on resource $r$ at timestep $t$. \\\hline
+    $L_{r,t}$ & Total load on resource $r$ at timestep $t$: $L_{r,t} = \sum_{i \in \mathcal{A}_t} w_{r,t}^{(i)}$. \\\hline
+    $C_{r,t}^{min}, C_{r,t}^{max}$ & Minimum and maximum capacity of resource $r$ at timestep $t$. \\\hline
+    \multicolumn{2}{|c|}{\textit{Spatial Variables}} \\\hline
+    $\mu_{ski}(i)$ & Fuzzy membership degree of intervention $i$ to the ``near ski station'' set. \\\hline
+    $\mu_{park}(i)$ & Fuzzy membership degree of intervention $i$ to the ``close to natural park'' set. \\\hline
+    $E_t$ & Daily environmental impact: $E_t = \sum_{i \in \mathcal{A}_t} \mu_{park}(i)$. \\\hline
+  \end{tabular}
+
+\end{table}
+ 
+\newpage
+\input{sections/appendix_generated_tables}

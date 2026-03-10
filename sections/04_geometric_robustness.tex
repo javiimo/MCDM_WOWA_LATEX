@@ -1,0 +1,72 @@
+\section{Stability-Based Selection}
+\label{sec:selection}
+Having established the normalized decision matrix $\mathbf{X}$ and the semantic definition of criteria, the core decision problem is now addressed by selecting the most robust maintenance schedule.
+
+\subsection{Criteria Importance Weights}
+
+The Weighted OWA (WOWA) operator requires a criteria importance vector $\mathbf{p} = (p_1, \dots, p_M)$ that dictates the ``potential influence'' of each criterion, independent of the realization of values. To examine how different organizational priorities affect the selection outcome, two contrasting importance configurations are considered (Table~\ref{tab:importance_vectors}): a \textit{Baseline} scenario reflecting standard operational priorities, and a \textit{Sustainability} scenario representing a strategic emphasis on environmental and social criteria.
+
+\begin{table}[htbp]
+\centering
+\caption{Criteria importance vector configurations representing distinct operational priorities.}
+\label{tab:importance_vectors}
+\begin{adjustbox}{center}
+\begin{tabular}{lccccccc}
+\toprule
+\textbf{Scenario} & \rotatebox{60}{\textbf{Rel.\ Stress}} & \rotatebox{60}{\textbf{Crit.\ Overlap}} & \rotatebox{60}{\textbf{Risk Volat.}} & \rotatebox{60}{\textbf{Rob.\ Slack}} & \rotatebox{60}{\textbf{Ski Season}} & \rotatebox{60}{\textbf{Eco-Stress}} & \rotatebox{60}{\textbf{Soc. Weekend}} \\
+\midrule
+Baseline & 0.10 & 0.25 & 0.10 & 0.20 & 0.10 & 0.10 & 0.15 \\
+Sustainability & 0.20 & 0.05 & 0.10 & 0.15 & 0.10 & 0.25 & 0.15 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}
+
+The \textit{Baseline} scenario is designed to reflect standard transmission system operator priorities. A total importance mass of 0.65 is assigned to the four technical criteria, maintaining the priority of security of supply. Within this block, \textit{Max Critical Overlap} is assigned 0.25 and \textit{Robustness Slack} 0.20, because both metrics encode direct exposure to simultaneous critical interventions and the available operational buffer. \textit{Reliability Stress} and \textit{Risk Volatility} are each assigned 0.10, since both characterize technical performance at an aggregate level rather than through direct feasibility margins. The remaining 0.35 is assigned to the socio-environmental criteria, with \textit{Social Weekend Risk} receiving 0.15 to reflect the practical importance of public acceptability, while \textit{Ski Season Risk} and \textit{Eco-Stress} remain at 0.10 each.
+
+The \textit{Sustainability} scenario is designed to represent a strategic setting where environmental compliance and social license are elevated to primary objectives without eliminating technical safeguards. The total importance mass is split evenly between technical criteria (0.50) and socio-environmental criteria (0.50). Within the socio-environmental block, \textit{Eco-Stress} is assigned 0.25 to reflect the possibility that environmental constraints become a binding driver of admissible schedules, while \textit{Social Weekend Risk} is assigned 0.15 to represent the relevance of public acceptance and local disruption. \textit{Ski Season Risk} is set to 0.10, capturing seasonal exposure as a material contextual factor. Within the technical block, \textit{Reliability Stress} is assigned 0.20 to maintain the priority of security, \textit{Robustness Slack} 0.15 to maintain reserve-based feasibility, \textit{Risk Volatility} 0.10 to retain sensitivity to operational instability, and \textit{Max Critical Overlap} 0.05 to keep simultaneous criticality under control without overriding the sustainability-driven objectives.
+
+\subsection{Stability-Based WOWA Selection in a Unified Weight Space}
+
+For a fixed importance vector and decision matrix $\mathbf{X}$, Theorem~\ref{thm:wowa} yields a unified weight-space representation of WOWA aggregations in which all alternatives are evaluated under a single common vector $\mathbf{W}$. Without this result, each alternative would be evaluated through its own cumulative-importance partition and its own induced weight vector, so equality between two WOWA scores would not define a hyperplane in a common simplex. Theorem~\ref{thm:wowa} removes this obstacle by refining all alternative-specific partitions into a shared grid, thereby restoring the linear geometry required for our exact stability analysis. In line with the classical literature on weight stability in additive MCDM methods \cite{mareschal1988weight}, the geometry of this common weight space is exploited to select the most robust solution, i.e., the alternative whose dominance is preserved under the widest range of weight variations.
+
+The space of admissible weights is the unit simplex $\Delta^{K-1}$. For any pair of alternatives $a_i$ and $a_j$, the condition of indifference (same score) defines a hyperplane:
+\[
+H_{ij} = \{ \mathbf{W} \in \Delta^{K-1} \mid \mathbf{W}^T(\mathbf{z}_i - \mathbf{z}_j) = 0 \}
+\]
+The collection of $\binom{N}{2}$ indifference hyperplanes partition the simplex into convex polytopes, each corresponding to a specific ranking. For the choice problem (identifying the single best alternative) only $N-1$ hyperplanes are relevant, those comparing the top candidate against each other alternative.
+
+As discussed earlier, the orness provides an interpretable summary of the decision-maker's attitude, but a single orness value does not uniquely determine the weight vector (see Figure~\ref{fig:orness_simplex}). Furthermore, a precise point estimate is often unrealistic. A more robust approach is to specify an \textit{orness interval} $[\alpha_{\min}, \alpha_{\max}]$, which defines a slice of the simplex $\Delta^{K-1}$. Within this feasible region, the goal is to find the most stable solution.
+
+While the volume of a stability region is a common proxy for robustness, it can be misleading: a region may have large volume but be arbitrarily close to an indifference hyperplane. A more rigorous metric is the \textit{stability radius} $\rho$, defined as the radius of the largest Euclidean ball inscribed within the feasible region. This quantifies the minimum perturbation in weights required to alter the decision.
+
+Therefore, to find the most stable choice, $N$ independent Linear Programs are solved (one per candidate $a_i$), maximizing the inscribed ball radius $\rho_i$ subject to dominance, simplex, and orness constraints. This geometric approach extends earlier LP-based sensitivity analyses for additive MCDM methods, where mathematical programming is used to determine the minimum modification of the weights required to make a given alternative ranked first \cite{wolters1995novel}. 
+
+Since the weights lie on the hyperplane $\sum_{k=1}^K W_k = 1$ rather than in full $\mathbb{R}^K$, distances must be measured within this $(K-1)$-dimensional surface. The vector $\mathbf{1} = (1, \dots, 1)^T$ is normal to this hyperplane, so any admissible displacement of $\mathbf{W}$ must be orthogonal to $\mathbf{1}$. Standard Euclidean distance in $\mathbb{R}^K$ would underestimate the margin to constraint boundaries, as it measures along directions that leave the feasible surface. To compute distances correctly, vectors are projected via $\Pi \in \mathbb{R}^{K \times K}$. For any vector $\mathbf{v} \in \mathbb{R}^K$, the projection removes its component along $\mathbf{1}$:
+\[
+\Pi\mathbf{v} = \mathbf{v} - \frac{\mathbf{v}^T\mathbf{1}}{\|\mathbf{1}\|^2} \mathbf{1} = \mathbf{v} - \frac{1}{K}\left(\sum_{j=1}^K v_j\right) \mathbf{1}
+\]
+
+For any linear constraint $\mathbf{n}^T \mathbf{W} \ge b$, the distance from $\mathbf{W}$ to the boundary $\mathbf{n}^T \mathbf{W} = b$, measured along the hyperplane, is $(\mathbf{n}^T \mathbf{W} - b)/\|\Pi\mathbf{n}\|_2$. A ball of radius $\rho$ centered at $\mathbf{W}$ remains inside the halfspace if and only if $\mathbf{W}$ is at least $\rho$ away from the boundary, yielding the margin condition $\mathbf{n}^T \mathbf{W} \ge b + \rho \cdot \|\Pi\mathbf{n}\|_2$. 
+
+Let $\boldsymbol{ r }=( r _1,\dots, r _K)$, with $ r _k = (K-k)/(K-1)$, denote the orness coefficients. Then, applying this to each constraint type:
+\begin{itemize}
+    \item \textbf{Simplex faces} ($W_k \ge 0$ for each $k$): Normal $\mathbf{e}_k$ \com{(the $k$-th canonical basis vector)}{esto no sé así está claro}, boundary $W_k = 0$. Yields \eqref{eq:lp_faces}.
+    \item \textbf{Orness bounds}: Normal $\pm\boldsymbol{ r }$, boundaries $\boldsymbol{ r }^T \mathbf{W} = \alpha_{\min}$ and $\boldsymbol{ r }^T \mathbf{W} = \alpha_{\max}$. Yields \eqref{eq:lp_orness_margin}.
+    \item \textbf{Dominance}: Normal $(\mathbf{z}_i - \mathbf{z}_j)$, boundary $\mathbf{W}^T(\mathbf{z}_i - \mathbf{z}_j) = 0$. Yields \eqref{eq:lp_dominance}.
+\end{itemize}
+
+Therefore, the Linear Problem for candidate $a_i$ is:
+\begin{align}
+    \textbf{Maximize } & \rho_i \label{eq:lp_objective}\\
+    \textbf{Subject to: } & \notag \\
+    & \sum_{k=1}^K W_k = 1, \quad W_k \ge 0 \quad \forall k \label{eq:lp_simplex}\\
+    & \alpha_{\min} \le \boldsymbol{ r }^T \mathbf{W} \le \alpha_{\max} \label{eq:lp_orness}\\
+    & W_k \ge \rho_i \cdot \|\Pi \mathbf{e}_k\|_2 \quad \forall k=1,\dots,K \label{eq:lp_faces}\\
+    & \boldsymbol{ r }^T \mathbf{W} - \alpha_{\min} \ge \rho_i \cdot \|\Pi\boldsymbol{ r }\|_2, \quad \alpha_{\max} - \boldsymbol{ r }^T \mathbf{W} \ge \rho_i \cdot \|\Pi\boldsymbol{ r }\|_2 \label{eq:lp_orness_margin}\\
+    & \mathbf{W}^T(\mathbf{z}_i - \mathbf{z}_j) \ge \rho_i \cdot \|\Pi (\mathbf{z}_i - \mathbf{z}_j)\|_2 \quad \forall j \neq i \label{eq:lp_dominance}
+\end{align}
+
+Constraints from \eqref{eq:lp_simplex} to \eqref{eq:lp_orness} define the feasible polytope, namely the simplex slice satisfying the orness bounds. Constraints from \eqref{eq:lp_faces} to \eqref{eq:lp_dominance} ensure that the inscribed ball of radius $\rho_i$ fits within this region.
+
+If this linear problem is feasible, then alternative $a_i$ can be the optimal choice for some weight vector. The largest $\rho^*$ is selected as the most robust decision.
